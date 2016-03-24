@@ -12,13 +12,13 @@ kramdown:
   enable_coderay: false
 
 presentation:
-    title: Название темы
+    title: "React Native: одного JS мало"
     service: Сервис
-    nda: true
+    nda: false
 
 author:
-    name: Автор
-    position: Должность
+    name: Алексей Андросов
+    position: Старший разработчик интерфейсов
     company:
         name: Яндекс
         url:  http://yandex.ru/
