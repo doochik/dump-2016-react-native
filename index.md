@@ -64,7 +64,7 @@ style: |
 * Появился в начале 2015 года
 * Построен на базе React
 * Не использует WebView и HTML-технологии
-* Все написано на JS + биндинги в нативные компоненты платформы
+* Нативные компоненты имеют биндинги в JS и обернуты в React
 * Поддержка iOS лучше, чем Android
 
 ## Первый ли он? Нет!
@@ -91,55 +91,8 @@ style: |
 
 * нет HTML, но есть компоненты платформы в JSX.
 * {:.next}нет CSS, но есть CSS-like полифилы.
-* {:.next}нет DOM API. Вообще.
-* {:.next}ES6/ES7 и все, что может babel, но нет JIT (на iOS).
-
-## &nbsp;
-{:.section}
-
-### И как это работает?
-
-## Как работает React Native
-
-Есть прекрасная статья [Bridging in React Native](http://tadeuzagallo.com/blog/react-native-bridge/) от Tadeu Zagallo.
-
-Если вкратце, то есть три потока:
-
-* shadow queue - тут рисуется layout
-* main thread - поток для работы UIKit
-* JavaScript thread - поток работы JS
-
-Каждый нативный компонент имеет свою собственную [GCD Queue](https://developer.apple.com/library/ios/documentation/General/Conceptual/ConcurrencyProgrammingGuide/OperationQueues/OperationQueues.htm),
-если не указал обратного.
-
-## Runtime startup
-
-* {:.next}Собирает информацию об экспортируемых модулях, методах и их типах
-* {:.next}Запускает JavaScriptCore
-* {:.next}Экспортирует конфигурацию модулей, как глобальный JSON-объект
-* {:.next}Запускает JS приложения
-
-## Runtime bridge startup
-{:.center}
-
-![](pictures/react-native-runtime.svg){:.react-native-runtime}
-
-## Runtime call cycle
-
-* {:.next}Собирает все вызовы нативного кода за event loop
-* {:.next}Вызовы преобразуеются в JSON
-* {:.next}Отправляет вызовы пачкой в мост JS<->Native, получает вернувшиеся callback.
-
-## Runtime call cycle
-{:.center}
-
-![](pictures/react-native-call-cycle.svg){:.react-native-runtime}
-
-## Runtime call cycle
-
-* {:.next}Компоненты не могут быть синхронными
-* {:.next}Могут экспортировать константы и методы с callback/promise
-* {:.next}Строгая типизация данных
+* {:.next}нет DOM API. Вообще. Совсем.
+* {:.next}ES6/ES7 и всё, что может babel, но нет JIT (на iOS).
 
 ## &nbsp;
 {:.section}
@@ -172,7 +125,9 @@ style: |
 
 <b>Платформы разные</b>, поэтому и <b>компоненты разные</b>. У них разная логика и механика взаимодействия.<br/>&nbsp;
 
-Можно писать все на JS и выкинуть понятие native, но вы этого не хотите :)
+Можно писать все на JS и выкинуть понятие native, но вы этого не хотите :)<br/>&nbsp;
+
+<b>Native &mdash; это ваще преимущество!</b>
 
 ## &nbsp;
 {:.section}
@@ -200,12 +155,14 @@ render() {
     return (
         <View style={styles.container}>
             <TouchableOpacity onPress={this.props.onPress}>
-                <Image source={require('../icons/close.png')}/>
+                <Image source={require('../icons/close.png')}
+                    resizeMode="cover"/>
             </TouchableOpacity>
             <Text style={styles.placeText} numberOfLines={1}>
                 {myText.join(', ')}
             </Text>
-            <ScrollView keyboardDismissMode="on-drag">
+            <ScrollView keyboardDismissMode="on-drag"
+                refreshControl={<RefreshControl/>}/>
                 {this.props.children}
             </ScrollView>
         </View>
@@ -238,10 +195,10 @@ render() {
 
 ## CSS
 
-### CSS не настоящий - это полифил
+### CSS не настоящий &mdash; это полифил
 
 * Верстка абсолютными значениями. Никаких относительных величин.
-* Для раскладки можно использовать ограниченную реализацию flexbox-свойств.
+* Для раскладки есть ограниченная реализация flexbox-свойств.
 * Полной поддержки CSSx никогда не будет. Она не нужна.
 * Всего реализовано около 70-и свойств.
 
@@ -250,7 +207,7 @@ render() {
 ~~~ javascript
 const styles = StyleSheet.create({
     default: {
-        fontSize: CustomPixelRatio.getPixelSizeForLayoutSize(7),
+        fontSize: PixelRatio.getPixelSizeForLayoutSize(7),
         color: 'rgba(0, 0, 0, 0.60)'
     },
     
@@ -325,6 +282,20 @@ AppRegistry.registerComponent('MyApp', () => MyApp);
 * {:.next}Надо сразу продумать взимодействие с <code>Navigator</code> (например, redux).
 * {:.next}После нескольких страниц, вы начнете испытывать боль.
 
+## iOS
+{:.center}
+
+![](pictures/vine-ios.jpg){:style="width:95%"}
+
+## Android
+{:.center}
+
+![](pictures/vine-android.jpg){:style="width:85%"}
+
+## ntnc
+
+Пример ActionSheet 
+
 ## ![](pictures/navigator.jpg){:.navigator-img}
 {:.cover.navigator}
 
@@ -339,6 +310,27 @@ AppRegistry.registerComponent('MyApp', () => MyApp);
 * <code>NavigatorBar</code> совсем отвязан от общей жизни.
 
 Во многом, проблемы решаются redux.
+
+## NavigatorBar или зачем нужен redux
+{:.center}
+
+![](pictures/dump-navigation1.png){:style="height:640px"}
+
+## NavigatorBar или зачем нужен redux
+{:.center}
+
+![](pictures/dump-navigation.svg)
+
+## NavigatorBar или зачем нужен redux
+
+
+* Не стоит пытаться связать <code>MyComponent</code> и <code>NavigationBar</code>.
+* Лучше использовать global state и dispatch actions (flux/redux).
+
+## NavigatorBar или зачем нужен redux
+{:.center}
+
+![](pictures/dump-navigation2.svg)
 
 ## NavigationExperimental
 
@@ -387,6 +379,72 @@ Navigation больше будет развиваться и поддержив�
 
 Eric Vicenti
 {:.note}
+
+## &nbsp;
+{:.section}
+
+### Анимации
+
+## &nbsp;
+{:.section}
+
+### CSS Transition?
+
+## &nbsp;
+{:.section}
+
+### <strike>CSS Transition</strike>
+
+## &nbsp;
+{:.section}
+
+### CSS Animation?
+
+## &nbsp;
+{:.section}
+
+### <strike>CSS Animation</strike>
+
+## &nbsp;
+{:.section}
+
+### &lt;Animated>!
+
+## Анимации
+
+* Реализуются через специальный компонент <code>Animated</code>
+* Есть <code>&lt;Animated.View></code>, <code>&lt;Animated.Image></code>, <code>&lt;Animated.Text></code>
+* Работают вне React, напрямую обновляя отображение
+
+## Анимации
+{:.big-code}
+~~~ jsx
+class MyComponent extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            bounceValue: new Animated.Value(0)
+        };
+    }
+    
+    componentDidMount() {
+        this.state.bounceValue.setValue(1.5);
+    }
+    
+    
+    render() {
+        return (
+            <Animated.Image source={...} 
+                style={
+                    {transform: [
+                        {scale: this.state.bounceValue}
+                    ]}
+                }
+                />
+        );
+    }
+}
+~~~
 
 ## &nbsp;
 {:.section}
@@ -502,3 +560,50 @@ Android
         <p class="contacts-right twitter">@doochik</p>
     </div>
 </div>
+
+## &nbsp;
+{:.section}
+
+### И как это работает?
+
+## Как работает React Native
+
+Есть прекрасная статья [Bridging in React Native](http://tadeuzagallo.com/blog/react-native-bridge/) от Tadeu Zagallo.
+
+Если вкратце, то есть три потока:
+
+* shadow queue - тут рисуется layout
+* main thread - поток для работы UIKit
+* JavaScript thread - поток работы JS
+
+Каждый нативный компонент имеет свою собственную [GCD Queue](https://developer.apple.com/library/ios/documentation/General/Conceptual/ConcurrencyProgrammingGuide/OperationQueues/OperationQueues.htm),
+если не указал обратного.
+
+## Runtime startup
+
+* {:.next}Собирает информацию об экспортируемых модулях, методах и их типах
+* {:.next}Запускает JavaScriptCore
+* {:.next}Экспортирует конфигурацию модулей, как глобальный JSON-объект
+* {:.next}Запускает JS приложения
+
+## Runtime bridge startup
+{:.center}
+
+![](pictures/react-native-runtime.svg){:.react-native-runtime}
+
+## Runtime call cycle
+
+* {:.next}Собирает все вызовы нативного кода за event loop
+* {:.next}Вызовы преобразуеются в JSON
+* {:.next}Отправляет вызовы пачкой в мост JS<->Native, получает вернувшиеся callback.
+
+## Runtime call cycle
+{:.center}
+
+![](pictures/react-native-call-cycle.svg){:.react-native-runtime}
+
+## Runtime call cycle
+
+* {:.next}Компоненты не могут быть синхронными
+* {:.next}Могут экспортировать константы и методы с callback/promise
+* {:.next}Строгая типизация данных
