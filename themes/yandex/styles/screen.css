@@ -405,7 +405,7 @@ body .slide:first-of-type h2
     margin-bottom: 30px;
 
     font-size: 30px;
-    line-height: 1;
+    line-height: 1.2;
 }
 
 /* Text */
@@ -703,7 +703,7 @@ body .slide:first-of-type h2
 
     font-size: 27px;
     font-weight: normal;
-    line-height: 1;
+    line-height: 1.2;
 }
 
 .slide ol > li:before
