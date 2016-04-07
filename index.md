@@ -97,7 +97,7 @@ style: |
 ## &nbsp;
 {:.section}
 
-### Давай уже напишем приложение!
+### Что же такое React Native?
 
 ## &nbsp;
 {:.section}
@@ -121,13 +121,29 @@ style: |
 
 ## Немного философии
 
-Все нативно, поэтому <b>забудьте про кроссплатформенность</b>. <i style="color:#aaa">Почти правда.</i><br/>&nbsp;
+Все нативно, поэтому <b>забудьте про полную кроссплатформенность</b>.
 
 <b>Платформы разные</b>, поэтому и <b>компоненты разные</b>. У них разная логика и механика взаимодействия.<br/>&nbsp;
 
 Можно писать все на JS и выкинуть понятие native, но вы этого не хотите :)<br/>&nbsp;
 
 <b>Native &mdash; это ваще преимущество!</b>
+
+## iOS
+{:.center}
+
+![](pictures/vine-ios.jpg){:style="width:95%"}
+
+## Android
+{:.center}
+
+![](pictures/vine-android.jpg){:style="width:85%"}
+
+## Кроссплатформенность
+
+* {:.next}Интерактивные компоненты (навигация, меню, ...) будут разные
+* {:.next}Из-за этого раскладка приложения скорее всего будет разной
+* {:.next}Логические компоненты приложения будут одинаковые
 
 ## &nbsp;
 {:.section}
@@ -195,7 +211,7 @@ render() {
 
 ## CSS
 
-### CSS не настоящий &mdash; это полифил
+### CSS не настоящий &mdash; это полифил.
 
 * Верстка абсолютными значениями. Никаких относительных величин.
 * Для раскладки есть ограниченная реализация flexbox-свойств.
@@ -251,8 +267,9 @@ const styles = StyleSheet.create({
 ## Болванка приложения
 
 * Подключайте redux/flux. Без них будет совсем плохо.
-* Продумайте свои экраны и в схематичном виде опишите логику переходов. Будут различия для iOS и Android.
-* Важно понимать, что вашим главным компонентом будет <code>Navigator</code>
+* Продумайте свои экраны и логику переходов.
+* Будут различия для iOS и Android.
+* Главным компонентом будет <code>Navigator</code>
 
 ## Болванка приложения
 
@@ -278,28 +295,14 @@ AppRegistry.registerComponent('MyApp', () => MyApp);
 ## Навигация
 
 * {:.next}Eсть специфичные компоненты (<code>TabBarIOS</code>, <code>ToolbarAndroid</code>). 
-* {:.next}Скорее всего, высокоуровневая навигация будет разной. 
+* {:.next}Высокоуровневая навигация будет разной. 
 * {:.next}Надо сразу продумать взимодействие с <code>Navigator</code> (например, redux).
 * {:.next}После нескольких страниц, вы начнете испытывать боль.
 
-## iOS
-{:.center}
+## &nbsp;
+{:.section}
 
-![](pictures/vine-ios.jpg){:style="width:95%"}
-
-## Android
-{:.center}
-
-![](pictures/vine-android.jpg){:style="width:85%"}
-
-## ntnc
-
-Пример ActionSheet 
-
-## ![](pictures/navigator.jpg){:.navigator-img}
-{:.cover.navigator}
-
-### Боль и ужас<br/>Navigator
+### Боль и ужас Navigator
 
 ## Navigator
 
@@ -309,7 +312,26 @@ AppRegistry.registerComponent('MyApp', () => MyApp);
 * Анимации и жесты сложно управляемы. 
 * <code>NavigatorBar</code> совсем отвязан от общей жизни.
 
-Во многом, проблемы решаются redux.
+Во многом, проблемы решаются с помощью redux.
+
+## Буэээ, Navigator
+
+~~~ jsx
+class MyApp extends React.Component {
+    render() {
+        return (
+            <Navigator
+                ref="MyNav"
+                renderScene={this.renderScene}
+            />
+        );
+    }
+    
+    componentDidMount() {
+        this.refs.MyNav.push({id: 'new-route'})
+    }
+}
+~~~
 
 ## NavigatorBar или зачем нужен redux
 {:.center}
@@ -408,13 +430,13 @@ Eric Vicenti
 ## &nbsp;
 {:.section}
 
-### &lt;Animated>!
+### &lt;Animated/>!
 
 ## Анимации
 
 * Реализуются через специальный компонент <code>Animated</code>
 * Есть <code>&lt;Animated.View></code>, <code>&lt;Animated.Image></code>, <code>&lt;Animated.Text></code>
-* Работают вне React, напрямую обновляя отображение
+* Работают вне React, напрямую обновляя нативные компоненты.
 
 ## Анимации
 {:.big-code}
@@ -473,7 +495,7 @@ React Native реализует основные, но не все.
 ## &nbsp;
 {:.section}
 
-### Кроссплатформенность
+### Кроссплатформенность компонент
 
 ## Неправильный путь
 
@@ -504,31 +526,92 @@ React Native реализует основные, но не все.
 
 ### Не надо писать все на JS!!1
 
-* У компонента должна быть реализация в UIKit или Android API
+* У компонента должна быть реализация в [UIKit](https://developer.apple.com/library/ios/documentation/UserExperience/Conceptual/MobileHIG/index.html#//apple_ref/doc/uid/TP40006556-CH66-SW1)
+или [Android API](https://www.google.com/design/spec/material-design/introduction.html)
 * Если ее нет, вы, скорее всего, хотите странного
 
 ## &nbsp;
 {:.section}
 
-### Пишем свой компонент
+### Пиcать компоненты просто!
 
-## Что не надо делать
+## &nbsp;
+{:.section}
 
-### Не надо писать все на JS!!1
+### Подключаем UIPageControl
 
-Хорошие антипримеры - GestureRecognizer или Social API (FB, VK, TW).
+## Ищем описание в UIKit
+{:.center}
 
-Вы не распознаете жесты так же как платформа и, не сможете определить доступность приложения FB или аккаунта FB внутри iOS.
+![](pictures/ui-pagecontrol- reference.png){:style="height:640px"}
 
-Обернуть SDK социальной сети совсем не сложно!
+## Описываем свойства в Objective-C
 
-## Как обновлять React Native
+~~~objectivec
+#import "RCTPageControlManager.h"
+#import "UIKit/UIKit.h"
 
-Привет, early adopter!
+@implementation RCTPageControlManager
 
-* Обновлять стоит сразу после выхода релиза. Чем больше тянете, тем больше будете страдать.
-* Есть <code>react-native upgrade</code>. Сносит все подключенные сторонние модули. Будьте аккуратны.
-* Facebook используется определенные версии XCode, GCC, Android SDK. Если вы боитесь проблем, то лучше жить с ними.
+RCT_EXPORT_MODULE()
+
+- (UIView *)view {
+  return [UIPageControl new];
+}
+
+RCT_EXPORT_VIEW_PROPERTY(currentPage, NSInteger)
+RCT_EXPORT_VIEW_PROPERTY(numberOfPages, NSInteger)
+RCT_EXPORT_VIEW_PROPERTY(hidesForSinglePage, BOOL)
+RCT_EXPORT_VIEW_PROPERTY(pageIndicatorTintColor, UIColor)
+RCT_EXPORT_VIEW_PROPERTY(currentPageIndicatorTintColor, UIColor)
+
+RCT_EXPORT_VIEW_PROPERTY(onChange, RCTBubblingEventBlock)
+~~~
+
+## Делаем React.Component
+ 
+~~~jsx
+class PageControlIOS extends Component {
+    render() {
+        return (
+            <RCTPageControl {...this.props}/>
+        );
+    }
+}
+
+const RCTPageControl = requireNativeComponent(
+    'RCTPageControl',
+    PageControlIOS
+);
+    
+module.exports = PageControlIOS;
+
+~~~
+ 
+## Это все, что надо сделать!
+
+* Никакой сложности
+* Мало кода
+* Пример готового нативного компонента [react-native-pagecontrol](https://github.com/doochik/react-native-pagecontrol)
+
+## Что не надо делать?
+
+### <b>Не надо писать всё на JS!!1</b>
+
+## Антипримеры
+
+### GestureRecognizer:
+ 
+* Реализация на JS - это сотни строк забористого кода и баги.
+* Подключение нативного распознования жестов занимает 50 строк.
+* Нативное распознование всегда работает так, как ожидает пользователь.
+
+## Антипримеры
+
+### Social API (FB, TW, VK):
+ 
+* Подключается легко. Есть готовые компоненты для FB и VK.
+* Нативный SDK умеет на порядок больше, чем JS API.
 
 ## Полезные ресуры
 
@@ -560,6 +643,14 @@ Android
         <p class="contacts-right twitter">@doochik</p>
     </div>
 </div>
+
+## Как обновлять React Native
+
+Привет, early adopter!
+
+* Обновлять стоит сразу после выхода релиза. Чем больше тянете, тем больше будете страдать.
+* Есть <code>react-native upgrade</code>. Сносит все подключенные сторонние модули. Будьте аккуратны.
+* Facebook используется определенные версии XCode, GCC, Android SDK. Если вы боитесь проблем, то лучше жить с ними.
 
 ## &nbsp;
 {:.section}
@@ -607,3 +698,8 @@ Android
 * {:.next}Компоненты не могут быть синхронными
 * {:.next}Могут экспортировать константы и методы с callback/promise
 * {:.next}Строгая типизация данных
+
+## ![](pictures/navigator.jpg){:.navigator-img}
+{:.cover.navigator}
+
+### Боль и ужас<br/>Navigator
